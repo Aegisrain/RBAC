@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.atcrowdfunding.dao.PermissionDao">
+
+    <insert id="insertPermission">
+        INSERT INTO permission (
+          name, url, pid
+        ) VALUES (
+          #{name}, #{url}, #{pid}
+        )
+    </insert>
+
+    <update id="updatePermission">
+        UPDATE permission
+        SET name = #{name}, url = #{url}
+        WHERE id = #{id}
+    </update>
+    
+    <delete id="deletePermission">
+        DELETE FROM permission WHERE id = #{id}
+    </delete>
+
+    <select id="queryPermissionByUser" resultType="com.atguigu.atcrowdfunding.entity.Permission">
+        SELECT
+          *
+        FROM permission
+        WHERE id IN (
+          SELECT permissionid FROM role_permission WHERE roleid IN (
+            SELECT roleid FROM user_role WHERE userid=#{id}
+          )
+        )
+    </select>
+</mapper>
